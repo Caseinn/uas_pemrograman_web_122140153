@@ -7,9 +7,9 @@ function App() {
     <>
       <MainLayout>
         <HeroSection
-          title="Welcome to Nels Recipes"
-          subtitle="Explore thousands of delicious recipes today!"
-          ctaText="Get Started"
+          title="Welcome to Nel's Recipes"
+          subtitle="Discover your new favorite recipes"
+          ctaText="Explore Recipes"
           ctaLink="/recipes"
         />
         <LatestRecipes />

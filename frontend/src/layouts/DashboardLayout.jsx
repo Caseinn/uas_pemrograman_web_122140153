@@ -29,7 +29,6 @@ export default function DashboardLayout({ children }) {
       >
         <div className="flex flex-col justify-between h-full space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-primary mb-4">Admin Panel</h2>
             <nav className="space-y-2">
               {navItems.map(({ label, path, icon: Icon }) => {
                 const active = location.pathname === path;

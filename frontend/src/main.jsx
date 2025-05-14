@@ -6,11 +6,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "@/pages/login/Page.jsx";
 import Register from "@/pages/register/Page.jsx";
 import RecipeList from "@/pages/recipes/ListPage";
-import RecipeDetail from "@/pages/recipes/DetailedPage";
+import RecipeDetail from "@/pages/recipes/DetailPage";
 import Dashboard from "@/pages/dashboard/Page";
 import ListRecipes from "@/pages/dashboard/manage-recipes/ListPage";
 import CreateRecipe from "@/pages/dashboard/manage-recipes/CreatePage";
 import EditRecipe from "@/pages/dashboard/manage-recipes/EditPage";
+import NotFoundPage from "@/pages/not-found/Page";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -21,7 +22,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/register" element={<Register />} />
         <Route path="/recipes" element={<RecipeList />} />
         <Route path="/recipes/:id" element={<RecipeDetail />} />
-        <Route path="*" element={<h1>Halaman tidak ditemukan</h1>} />
+        <Route path="*" element={<NotFoundPage />} />
 
         {/* ADMIN AREAS */}
         <Route path="/dashboard" element={<Dashboard />} />

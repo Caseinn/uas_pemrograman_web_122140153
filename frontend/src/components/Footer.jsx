@@ -13,61 +13,29 @@ export default function Footer() {
 
   return (
     <footer className="bg-primary text-white pt-12 px-6 relative overflow-hidden">
-      {/* Decorative Background Element */}
+      {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary to-secondary opacity-90 z-0"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-white/20">
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 pb-12 border-b border-white/20">
         {/* Brand Info */}
-        <div>
+        <div className="flex-1">
           <h3 className="text-xl font-bold mb-4">Nel's Kitchen</h3>
-          <p className="text-sm text-white/80">
+          <p className="text-sm text-white/80 max-w-xs">
             A digital platform to save, organize, and share delicious recipes
             with ease.
           </p>
         </div>
 
-        {/* Navigation Links */}
-        <div>
-          <h4 className="text-md font-semibold mb-4 text-white/90">
-            Navigation
-          </h4>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <Link
-                to="/"
-                className="hover:text-white transition-colors duration-200"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/recipes"
-                className="hover:text-white transition-colors duration-200"
-              >
-                Recipes
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="#contact"
-                className="hover:text-white transition-colors duration-200"
-              >
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
-
         {/* Contact Info */}
-        <div id="contact">
+        <div className="flex-1">
           <h4 className="text-md font-semibold mb-4 text-white/90">
             Contact Us
           </h4>
           <ul className="space-y-3 text-sm text-white/80">
             <li className="flex items-start gap-2">
               <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-              Jakarta, Indonesia
+              Jambi, Indonesia
             </li>
             <li className="flex items-start gap-2">
               <Mail className="w-4 h-4 mt-0.5 shrink-0" />
@@ -75,13 +43,13 @@ export default function Footer() {
             </li>
             <li className="flex items-start gap-2">
               <Phone className="w-4 h-4 mt-0.5 shrink-0" />
-              +62 812 3456 7890
+              +62 822 XXXX XXXX
             </li>
           </ul>
         </div>
 
         {/* Social Media */}
-        <div>
+        <div className="flex-1">
           <h4 className="text-md font-semibold mb-4 text-white/90">
             Follow Us
           </h4>
@@ -120,7 +88,7 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="relative z-10 py-6 text-center text-sm text-white/60">
-        © {currentYear} Nel's Kitchen. All rights reserved.
+        © {currentYear} Nel's Kitchen. Made.
       </div>
     </footer>
   );
