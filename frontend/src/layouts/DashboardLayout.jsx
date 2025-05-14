@@ -1,0 +1,92 @@
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { LayoutDashboard, BookOpen, Menu, X, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import clsx from "clsx";
+
+const navItems = [
+  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  {
+    label: "Manage Recipes",
+    path: "/dashboard/manage-recipes",
+    icon: BookOpen,
+  },
+];
+
+export default function DashboardLayout({ children }) {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  return (
+    <div className="min-h-screen bg-muted/40">
+      {/* Sidebar */}
+      <aside
+        className={clsx(
+          "fixed md:top-4 md:left-4 top-0 left-0 z-50 w-64 h-full md:h-[calc(100vh-2rem)] bg-white shadow-xl rounded-none md:rounded-2xl p-6 transition-transform duration-300 ease-in-out overflow-y-auto",
+          "transform md:translate-x-0",
+          open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        )}
+      >
+        <div className="flex flex-col justify-between h-full space-y-6">
+          <div>
+            <h2 className="text-xl font-bold text-primary mb-4">Admin Panel</h2>
+            <nav className="space-y-2">
+              {navItems.map(({ label, path, icon: Icon }) => {
+                const active = location.pathname === path;
+                return (
+                  <Link
+                    key={path}
+                    to={path}
+                    onClick={() => setOpen(false)}
+                    className={clsx(
+                      "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                      active
+                        ? "bg-primary text-white"
+                        : "text-gray-700 hover:bg-primary/10"
+                    )}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          <Link to={"/"}>
+            <Button
+              variant="destructive"
+              className="w-full flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </Link>
+        </div>
+      </aside>
+
+      {/* Mobile Header */}
+      <header className="md:hidden flex items-center justify-between p-4 bg-white shadow-md sticky top-0 z-40">
+        <h1 className="font-bold text-lg text-primary">Dashboard</h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </Button>
+      </header>
+
+      {/* Main Content */}
+      <main
+        className={clsx(
+          "p-6 transition-all",
+          "md:ml-[272px] mt-4", // 272px = 64px (sidebar width) + 2*16px padding
+          "min-h-screen"
+        )}
+      >
+        {children}
+      </main>
+    </div>
+  );
+}
