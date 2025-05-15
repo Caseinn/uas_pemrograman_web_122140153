@@ -22,13 +22,13 @@ def main():
         user1 = User(
             username='budi',
             email='budi@example.com',
-            password=bcrypt.hashpw(b'budi1234', bcrypt.gensalt()), 
+            password=bcrypt.hashpw('budi1234'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
             role='user'
         )
         admin = User(
             username='chef',
             email='chef@example.com',
-            password=bcrypt.hashpw(b'chef1234', bcrypt.gensalt()),
+            password=bcrypt.hashpw('chef1234'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
             role='admin'
         )
 

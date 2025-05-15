@@ -62,14 +62,14 @@ export default function Navbar() {
             <Link to="/login">Login</Link>
           </Button>
 
-          <Button
+          {/* <Button
             asChild
             variant="outline"
             size="sm"
             className="text-primary border-primary hover:bg-primary/5"
           >
             <Link to="/dashboard">Dashboard</Link>
-          </Button>
+          </Button> */}
         </div>
 
         {/* Mobile Menu Icon */}

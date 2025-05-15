@@ -27,13 +27,14 @@ class UserCreateSchema(Schema):
     username = fields.String(required=True, validate=validate.Length(min=3))
     email = fields.Email(required=True)
     password = fields.String(required=True, load_only=True)
-
+    
     def load(self, data, *args, **kwargs):
         data = super().load(data, *args, **kwargs)
         data["password"] = bcrypt.hashpw(
             data["password"].encode("utf-8"), bcrypt.gensalt()
         ).decode("utf-8")
         return data
+    
 
 class UserUpdateSchema(Schema):
     """Schema untuk pembaruan user (hanya field yang bisa diubah)"""

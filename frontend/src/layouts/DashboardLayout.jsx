@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { LayoutDashboard, BookOpen, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 
 const navItems = [
@@ -15,7 +16,17 @@ const navItems = [
 
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(false);
+  const { logout, loading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const success = await logout();
+    if (success) {
+      alert("Logout successful!");
+      navigate("/");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-muted/40">
@@ -52,15 +63,14 @@ export default function DashboardLayout({ children }) {
             </nav>
           </div>
 
-          <Link to={"/"}>
-            <Button
-              variant="destructive"
-              className="w-full flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </Button>
-          </Link>
+          <Button
+            variant="destructive"
+            className="w-full flex items-center gap-2"
+            onClick={handleLogout}
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </Button>
         </div>
       </aside>
 
@@ -80,7 +90,7 @@ export default function DashboardLayout({ children }) {
       <main
         className={clsx(
           "p-6 transition-all",
-          "md:ml-[272px] mt-4", // 272px = 64px (sidebar width) + 2*16px padding
+          "md:ml-[272px] mt-4",
           "min-h-screen"
         )}
       >

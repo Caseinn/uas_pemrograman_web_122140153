@@ -1,6 +1,9 @@
-// src/components/landing-page/latest-recipes/RecipeCard.jsx
-
 import { Link } from "react-router-dom";
+
+// Truncate function
+function truncate(text, maxLength) {
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+}
 
 export default function RecipeCard({ recipe }) {
   return (
@@ -16,7 +19,7 @@ export default function RecipeCard({ recipe }) {
             {recipe.title}
           </h3>
           <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-            {recipe.description}
+            {truncate(recipe.description, 60)}
           </p>
           <div className="mt-2 flex justify-between items-center">
             <span className="text-xs text-primary font-medium">

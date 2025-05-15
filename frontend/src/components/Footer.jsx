@@ -88,7 +88,7 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="relative z-10 py-6 text-center text-sm text-white/60">
-        © {currentYear} Nel's Kitchen. Made.
+        © {currentYear} Nel's Kitchen. Made with Love.
       </div>
     </footer>
   );

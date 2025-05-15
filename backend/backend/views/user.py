@@ -80,25 +80,3 @@ def delete_user(request):
     UserService.delete_user(request.dbsession, user)
     return HTTPNoContent()
 
-@view_config(route_name='api_v1.register', request_method='POST', renderer='json')
-def register(request):
-    try:
-        user_data = UserCreateSchema().load(request.json_body)
-    except ValidationError as err:
-        raise HTTPBadRequest(json={'errors': err.messages})
-
-    user_data['role'] = 'user'
-
-    raw_password = user_data.pop('password')
-    user_data['password'] = raw_password 
-
-    if UserService.get_user_by_email(request.dbsession, user_data['email']):
-        raise HTTPBadRequest(json={'errors': {'email': ['Email already taken']}})
-    if UserService.get_user_by_username(request.dbsession, user_data['username']):
-        raise HTTPBadRequest(json={'errors': {'username': ['Username already taken']}})
-    
-    user = UserService.create_user(request.dbsession, user_data)
-    return Response(
-        json=UserSchema().dump(user),
-        status=201
-    )

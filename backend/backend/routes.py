@@ -10,3 +10,4 @@ def includeme(config):
     config.add_route('api_v1.comment', '/api/v1/comments/{id}')
     config.add_route('api_v1.login', '/api/v1/login')
     config.add_route('api_v1.register', '/api/v1/register')
+    config.add_route('api_v1.logout', '/api/v1/logout')
