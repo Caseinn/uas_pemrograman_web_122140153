@@ -1,5 +1,4 @@
 import os
-
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -20,6 +19,14 @@ requires = [
     'SQLAlchemy',
     'transaction',
     'zope.sqlalchemy',
+    'bcrypt',                
+    'marshmallow',           
+    'pyramid-marshmallow',   
+    'WebTest',               
+    'pytest',                
+    'pytest-cov',            
+    'Pillow',
+    'psycopg2-binary'                
 ]
 
 tests_require = [
