@@ -4,9 +4,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Default images untuk hero section
 const defaultImages = [
-  "https://upload.wikimedia.org/wikipedia/commons/5/5e/La_cuisine_%28mus%C3%A9e_dart_nouveau%2C_Riga%29_%287563655820%29.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1X3hwZz47RDCf1G5zehwrGhPSXoIJMDAz3w&s",
-  "https://www.realsimple.com/thmb/vX5iLDFcU2ebXER4yJv7XaTI6EQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-2161780422-2c0c043bcdf04315809453f6ffea281e.jpg",
+  "/images/kitchen1.jpg",
+  "/images/kitchen2.jpg",
+  "/images/kitchen3.jpeg",
 ];
 
 const HeroSection = forwardRef(
@@ -68,7 +68,12 @@ const HeroSection = forwardRef(
         ))}
 
         {/* Overlay Content */}
-        <div className="absolute inset-0 bg-black/50 z-10 flex flex-col items-center justify-center text-center px-6">
+        <div className="absolute inset-0 bg-black/20 z-10 flex flex-col items-center justify-center text-center px-6 pt-16 md:pt-8">
+          <img
+            src="/mascot.png"
+            alt="Mascot"
+            className=" mb-4 rounded-full shadow-lg"
+          />
           <h2 className="text-4xl lg:text-5xl font-extrabold text-white mb-4 drop-shadow-lg whitespace-pre-line">
             {title || "Nels Recipes\nDiscover the joy of cooking"}
           </h2>
@@ -119,7 +124,7 @@ const HeroSection = forwardRef(
         </div>
 
         {/* Background Overlay Gradient */}
-        <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-b from-transparent to-[#f4f8ff] pointer-events-none z-10" />
+        {/* <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-b from-transparent to-secondary pointer-events-none z-10" /> */}
       </section>
     );
   }

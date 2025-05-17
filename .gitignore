@@ -39,7 +39,7 @@ var/
 *.pid
 
 # Pyramid specific
-*.ini
+ini
 *.cfg
 local_settings.py
 

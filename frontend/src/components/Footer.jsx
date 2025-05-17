@@ -13,9 +13,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-primary text-white pt-12 px-6 relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary to-secondary opacity-90 z-0"></div>
-
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 pb-12 border-b border-white/20">
         {/* Brand Info */}
@@ -85,7 +82,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
       {/* Copyright */}
       <div className="relative z-10 py-6 text-center text-sm text-white/60">
         © {currentYear} Nel's Kitchen. Made with Love.

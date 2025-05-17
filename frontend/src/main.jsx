@@ -12,16 +12,20 @@ import ListRecipes from "@/pages/dashboard/manage-recipes/ListPage";
 import CreateRecipe from "@/pages/dashboard/manage-recipes/CreatePage";
 import EditRecipe from "@/pages/dashboard/manage-recipes/EditPage";
 import NotFoundPage from "@/pages/not-found/Page";
+import UnAuthorizedPage from "@/pages/unauthorized/Page";
+import { Toaster } from "sonner";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
+      <Toaster position="top-right" richColors closeButton expand />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/recipes" element={<RecipeList />} />
         <Route path="/recipes/:id" element={<RecipeDetail />} />
+        <Route path="/unauthorized" element={<UnAuthorizedPage />} />
         <Route path="*" element={<NotFoundPage />} />
 
         {/* ADMIN AREAS */}

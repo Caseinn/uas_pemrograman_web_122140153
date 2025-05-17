@@ -1,18 +1,25 @@
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import RecipeCard from "@/components/card/Recipe";
+import RecipeCardSkeleton from "@/components/skeleton/RecipeCardSkeleton";
 import { useRecipes } from "@/hooks/useRecipes";
 import MainLayout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import RecipeSearchBar from "@/components/RecipeSearchBar";
+import HeroSection from "@/components/landing-page/Hero";
 
 const ITEMS_PER_PAGE = 6;
 
 export default function RecipeList() {
   const { recipes, loading, error } = useRecipes();
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Query params
+  const query = searchParams.get("query") || "";
+  const page = Math.max(parseInt(searchParams.get("page")) || 1, 1);
+
+  // Filter and paginate
   const filteredRecipes = useMemo(() => {
     return recipes.filter((r) =>
       r.title.toLowerCase().includes(query.toLowerCase())
@@ -26,54 +33,62 @@ export default function RecipeList() {
     startIndex + ITEMS_PER_PAGE
   );
 
+  // Handlers
   const handleSearch = (e) => {
-    setQuery(e.target.value);
-    setPage(1); // Reset to page 1 on new search
+    const newQuery = e.target.value;
+    setSearchParams({ query: newQuery, page: "1" });
   };
 
-  if (loading) {
-    return <div className="text-center py-12">Loading...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center text-red-500 py-12">
-        Error: {error.message}
-      </div>
-    );
-  }
+  const goToPage = (newPage) => {
+    setSearchParams((prev) => {
+      const q = prev.get("query") || "";
+      return { query: q, page: newPage.toString() };
+    });
+  };
 
   return (
     <MainLayout>
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">
+      <HeroSection
+        title="Explore Our Recipe Collection"
+        subtitle="Find your favorite dishes and get inspired to cook something new today!"
+        ctaText="See All Recipes"
+        // ctaLink="/recipes#all-recipes"
+        images={[
+          "/images/kitchen1.jpg",
+          "/images/kitchen2.jpg",
+          "/images/kitchen3.jpeg",
+        ]}
+      />
+
+      <section className="py-16 bg-secondary">
+        <div className="container mx-auto px-6" id="all-recipes">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-secondary-foreground">
             All Recipes
           </h2>
 
           {/* Search Bar */}
-          <div className="max-w-md mx-auto mb-8">
-            <Input
-              type="text"
-              value={query}
-              onChange={handleSearch}
-              placeholder="Search recipes..."
-              className="border-primary focus-visible:ring-primary"
-            />
-          </div>
+          <RecipeSearchBar value={query} onChange={handleSearch} />
 
-          {/* Recipes */}
-          {paginatedRecipes.length > 0 ? (
+          {/* Recipe Cards */}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+                <RecipeCardSkeleton key={index} />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-12">
+              Error: {error.message}
+            </div>
+          ) : paginatedRecipes.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginatedRecipes.map((recipe) => (
-                  <Link key={recipe.id} to={`/recipes/${recipe.id}`}>
-                    <RecipeCard recipe={recipe} />
-                  </Link>
+                  <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
               </div>
 
-              {/* Pagination Controls */}
+              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex justify-between items-center mt-10 max-w-md mx-auto">
                   <p className="text-sm text-muted-foreground">
@@ -84,7 +99,7 @@ export default function RecipeList() {
                       variant="outline"
                       size="sm"
                       className="text-primary border-primary"
-                      onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                      onClick={() => goToPage(Math.max(page - 1, 1))}
                       disabled={page === 1}
                     >
                       Prev
@@ -93,9 +108,7 @@ export default function RecipeList() {
                       variant="outline"
                       size="sm"
                       className="text-primary border-primary"
-                      onClick={() =>
-                        setPage((p) => Math.min(p + 1, totalPages))
-                      }
+                      onClick={() => goToPage(Math.min(page + 1, totalPages))}
                       disabled={page === totalPages}
                     >
                       Next
@@ -105,7 +118,7 @@ export default function RecipeList() {
               )}
             </>
           ) : (
-            <p className="text-center text-muted-foreground mt-10">
+            <p className="text-center text-secondary-foreground mt-10">
               No recipes found.
             </p>
           )}

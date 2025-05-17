@@ -9,9 +9,14 @@ from .. import models
 def my_view(request):
     try:
         query = request.dbsession.query(models.MyModel)
-        one = query.filter(models.MyModel.name == 'one').one()
-    except SQLAlchemyError:
-        return Response(db_err_msg, content_type='text/plain', status=500)
+        one = query.filter(models.MyModel.name == 'one').first()
+
+        if not one:
+            return Response("No data found for name='one'", content_type='text/plain', status=404)
+
+    except SQLAlchemyError as e:
+        return Response(f"{db_err_msg}\n\n{str(e)}", content_type='text/plain', status=500)
+
     return {'one': one, 'project': 'nels_kitchen'}
 
 

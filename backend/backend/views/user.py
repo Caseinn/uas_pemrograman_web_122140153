@@ -12,6 +12,7 @@ from ..schemas.user import (
     UserCreateSchema,
     UserUpdateSchema
 )
+from pyramid.httpexceptions import HTTPUnauthorized
 
 import bcrypt
 
@@ -79,4 +80,3 @@ def delete_user(request):
     
     UserService.delete_user(request.dbsession, user)
     return HTTPNoContent()
-

@@ -4,20 +4,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner"; // ✅ Tambahkan ini
 import DashboardLayout from "@/layouts/DashboardLayout";
+
+const API_URL = "http://localhost:6543/api/v1/recipes";
 
 export default function CreateRecipe() {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    category: "",
-    duration: "",
     image: "",
     ingredients: "",
     steps: "",
   });
 
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,16 +27,40 @@ export default function CreateRecipe() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
 
-    // Simulasi penyimpanan (bisa diganti fetch ke API)
-    setTimeout(() => {
-      console.log("Recipe submitted:", form);
-      setSubmitting(false);
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to create recipe");
+      }
+
+      // ✅ Tampilkan toast success
+      toast.success("Recipe created successfully!");
+
+      // Redirect
       navigate("/dashboard/manage-recipes");
-    }, 1000);
+    } catch (err) {
+      const message = err.message || "Unexpected error";
+      setError(message);
+      // ✅ Tampilkan toast error
+      toast.error(`Error: ${message}`);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -43,6 +69,8 @@ export default function CreateRecipe() {
         <h1 className="text-2xl font-bold mb-6 text-gray-800">
           Create New Recipe
         </h1>
+
+        {error && <p className="text-red-600 mb-4">{error}</p>}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="grid gap-2">
@@ -69,32 +97,6 @@ export default function CreateRecipe() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="category">Category</Label>
-              <Input
-                id="category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                required
-                placeholder="e.g. Indonesian"
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="duration">Duration</Label>
-              <Input
-                id="duration"
-                name="duration"
-                value={form.duration}
-                onChange={handleChange}
-                required
-                placeholder="e.g. 30 min"
-              />
-            </div>
-          </div>
-
           <div className="grid gap-2">
             <Label htmlFor="image">Image URL</Label>
             <Input
@@ -102,32 +104,33 @@ export default function CreateRecipe() {
               name="image"
               value={form.image}
               onChange={handleChange}
-              required
               placeholder="https://example.com/image.jpg"
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="ingredients">Ingredients (comma-separated)</Label>
+            <Label htmlFor="ingredients">
+              Ingredients (use line breaks for each)
+            </Label>
             <Textarea
               id="ingredients"
               name="ingredients"
               value={form.ingredients}
               onChange={handleChange}
               required
-              placeholder="e.g. rice, egg, soy sauce, garlic"
+              placeholder="e.g.\n2 cups of rice\n1 egg\n1 tbsp soy sauce"
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="steps">Steps (one per line)</Label>
+            <Label htmlFor="steps">Steps (use line breaks for each)</Label>
             <Textarea
               id="steps"
               name="steps"
               value={form.steps}
               onChange={handleChange}
               required
-              placeholder="e.g. 1. Heat the pan...\n2. Add egg..."
+              placeholder="e.g.\n1. Heat the pan\n2. Add garlic\n3. Stir fry rice"
             />
           </div>
 

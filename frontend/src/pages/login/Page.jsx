@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner"; // ✅ Import Sonner
 import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,20 +29,26 @@ export default function Login() {
     e.preventDefault();
     setProcessing(true);
 
-    const success = await login(data.username, data.password);
-    if (success) {
-      alert("Login successful!");
-      navigate("/dashboard");
+    const result = await login(data.username, data.password);
+
+    if (result.success) {
+      toast.success("Login successful!");
+      const redirectPath = result.role === "admin" ? "/dashboard" : "/";
+      navigate(redirectPath);
+    } else {
+      toast.error("Login failed. Please check your credentials.");
     }
 
     setProcessing(false);
   };
 
   return (
-    <AuthLayout title="Log in to your account" description="Enter your email and password to log in">
+    <AuthLayout
+      title="Log in to your account"
+      description="Enter your email and password to log in"
+    >
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="grid gap-6">
-          {/* Username / Email */}
           <div className="grid gap-2">
             <Label htmlFor="username">Username</Label>
             <Input
@@ -61,7 +68,6 @@ export default function Login() {
             )}
           </div>
 
-          {/* Password */}
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -80,22 +86,16 @@ export default function Login() {
             )}
           </div>
 
-          {/* Submit Button */}
           <Button type="submit" className="mt-2 w-full" disabled={processing}>
-            {processing ? (
-              <span className="animate-spin mr-2">🔄</span>
-            ) : null}
+            {processing ? <span className="animate-spin mr-2">🔄</span> : null}
             Log in
           </Button>
         </div>
 
-        {/* Register Link */}
-        <div className="text-muted-foreground text-center text-sm">
-          Don't have an account?{" "}
-          <Link to="/register">Create an account</Link>
+        <div className="text-secondary-foreground text-center text-sm">
+          Don't have an account? <Link to="/register">Create an account</Link>
         </div>
 
-        {/* Optional Status Message */}
         {status && (
           <div className="text-center text-sm text-red-500 mt-2">{status}</div>
         )}

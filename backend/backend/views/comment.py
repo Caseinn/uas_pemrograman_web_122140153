@@ -12,16 +12,27 @@ from ..schemas.comment import (
     CommentCreateSchema,
     CommentUpdateSchema
 )
-
 from marshmallow.exceptions import ValidationError
 from ..models.user import User
 from ..models.recipe import Recipe
+import transaction
+from sqlalchemy.orm import joinedload
 
 @view_config(route_name='api_v1.comments', request_method='GET', renderer='json')
 def get_comments(request):
-    """Dapatkan semua komentar."""
-    comments = CommentService.get_all_comments(request.dbsession)
+    recipe_id = request.params.get('recipe_id')
+    if recipe_id:
+        try:
+            recipe_id = int(recipe_id)
+        except ValueError:
+            raise HTTPBadRequest(json={'errors': {'recipe_id': ['Harus berupa angka.']}})
+        comments = CommentService.get_comments_by_recipe_id(request.dbsession, recipe_id)
+    else:
+        # Ensure the 'user' relationship is loaded for each comment
+        comments = request.dbsession.query(Comment).options(joinedload(Comment.user)).all()
+
     return CommentSchema(many=True).dump(comments)
+
 
 @view_config(route_name='api_v1.comments', request_method='POST', renderer='json')
 def create_comment(request):
@@ -30,26 +41,16 @@ def create_comment(request):
         comment_data = CommentCreateSchema().load(request.json_body)
     except ValidationError as err:
         raise HTTPBadRequest(json={'errors': err.messages})
-    
-    # Pastikan user dan recipe ada
+
     user = request.dbsession.query(User).get(comment_data['user_id'])
     recipe = request.dbsession.query(Recipe).get(comment_data['recipe_id'])
-    
+
     if not user or not recipe:
         raise HTTPBadRequest(json={'errors': {'foreign_key': ['User atau Recipe tidak ditemukan']}})
-    
-    comment = CommentService.create_comment(request.dbsession, comment_data)
-    return CommentSchema().dump(comment)
 
-@view_config(route_name='api_v1.comment', request_method='GET', renderer='json')
-def get_comment(request):
-    """Dapatkan komentar berdasarkan ID."""
-    comment_id = int(request.matchdict['id'])
-    comment = CommentService.get_comment_by_id(request.dbsession, comment_id)
-    
-    if not comment:
-        raise HTTPNotFound()
-    
+    with transaction.manager:
+        comment = CommentService.create_comment(request.dbsession, comment_data)
+
     return CommentSchema().dump(comment)
 
 @view_config(route_name='api_v1.comment', request_method='PUT', renderer='json')
@@ -68,6 +69,7 @@ def update_comment(request):
     
     updated_comment = CommentService.update_comment(request.dbsession, comment, update_data)
     return CommentSchema().dump(updated_comment)
+
 
 @view_config(route_name='api_v1.comment', request_method='DELETE')
 def delete_comment(request):

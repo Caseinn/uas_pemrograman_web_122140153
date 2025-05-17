@@ -12,6 +12,7 @@ from ..schemas.user import (
     UserCreateSchema,
 )
 import bcrypt
+from marshmallow import ValidationError
 
 @view_config(route_name='api_v1.login', request_method='POST', renderer='json')
 def login(request):

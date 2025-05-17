@@ -7,17 +7,43 @@ import {
   TableHead,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useRecipes } from "@/hooks/useRecipes";
+import { useRecipes, useDeleteRecipe } from "@/hooks/useRecipes";
 import { Link } from "react-router-dom";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useState } from "react";
-import DashboardLayout from "@/layouts/DashboardLayout"; // ✅ import layout
+import DashboardLayout from "@/layouts/DashboardLayout";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner"; // ✅ Tambahkan ini
 
 const ITEMS_PER_PAGE = 5;
 
 export default function ListRecipes() {
   const { recipes, loading, error } = useRecipes();
+  const { deleteRecipe, loading: deleting } = useDeleteRecipe();
   const [page, setPage] = useState(1);
+  const [deletingId, setDeletingId] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // ✅ Pemicu render ulang sederhana
+
+  const handleDelete = async (id) => {
+    const success = await deleteRecipe(id);
+    if (success) {
+      toast.success("Recipe deleted successfully."); // ✅ toast sukses
+      setDeletingId(null);
+      setRefreshTrigger((prev) => prev + 1); // ✅ picu ulang render
+    } else {
+      toast.error("Failed to delete recipe."); // ✅ toast error
+    }
+  };
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -47,22 +73,26 @@ export default function ListRecipes() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-12 text-center">#</TableHead>
+                  <TableHead className="w-12 text-center">No</TableHead>
                   <TableHead>Title</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Duration</TableHead>
+                  <TableHead>Created At</TableHead>
+                  <TableHead>Updated At</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedRecipes.map((recipe, index) => (
-                  <TableRow key={recipe.id}>
+                  <TableRow key={`${recipe.id}-${refreshTrigger}`}>
                     <TableCell className="text-center font-medium">
                       {startIndex + index + 1}
                     </TableCell>
                     <TableCell>{recipe.title}</TableCell>
-                    <TableCell>{recipe.category || "N/A"}</TableCell>
-                    <TableCell>{recipe.duration || "N/A"}</TableCell>
+                    <TableCell>
+                      {new Date(recipe.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(recipe.updated_at).toLocaleDateString()}
+                    </TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="outline" size="sm">
                         <Link
@@ -72,14 +102,37 @@ export default function ListRecipes() {
                           Edit
                         </Link>
                       </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => alert(`Delete recipe ${recipe.id}`)}
-                      >
-                        <Trash2 className="w-4 h-4 mr-1" />
-                        Delete
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="sm">
+                            <Trash2 className="w-4 h-4 mr-1" />
+                            {deleting && deletingId === recipe.id
+                              ? "Deleting..."
+                              : "Delete"}
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will permanently delete the recipe{" "}
+                              <strong>{recipe.title}</strong>. This action
+                              cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => {
+                                setDeletingId(recipe.id);
+                                handleDelete(recipe.id);
+                              }}
+                            >
+                              Confirm Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </TableCell>
                   </TableRow>
                 ))}

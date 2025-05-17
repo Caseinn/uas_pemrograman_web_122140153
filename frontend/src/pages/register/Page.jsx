@@ -37,6 +37,7 @@ export default function Register() {
     }
 
     const success = await register(data.username, data.email, data.password);
+
     if (success) {
       alert("Registration successful!");
       navigate("/login");
@@ -46,7 +47,10 @@ export default function Register() {
   };
 
   return (
-    <AuthLayout title="Create an account" description="Enter your details below to create your account">
+    <AuthLayout
+      title="Create an account"
+      description="Enter your details below to create your account"
+    >
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="grid gap-6">
           {/* Username */}
@@ -64,7 +68,9 @@ export default function Register() {
               disabled={processing}
               placeholder="Your username"
             />
-            {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
+            {errors.username && (
+              <p className="text-sm text-red-500">{errors.username}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -81,7 +87,9 @@ export default function Register() {
               disabled={processing}
               placeholder="email@example.com"
             />
-            {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -98,7 +106,9 @@ export default function Register() {
               disabled={processing}
               placeholder="Password"
             />
-            {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password}</p>
+            )}
           </div>
 
           {/* Confirm Password */}
@@ -116,23 +126,22 @@ export default function Register() {
               placeholder="Confirm password"
             />
             {errors.password_confirmation && (
-              <p className="text-sm text-red-500">{errors.password_confirmation}</p>
+              <p className="text-sm text-red-500">
+                {errors.password_confirmation}
+              </p>
             )}
           </div>
 
           {/* Submit Button */}
           <Button type="submit" className="mt-2 w-full" disabled={processing}>
-            {processing ? (
-              <span className="animate-spin mr-2">🔄</span>
-            ) : null}
+            {processing ? <span className="animate-spin mr-2">🔄</span> : null}
             Create account
           </Button>
         </div>
 
         {/* Login Link */}
-        <div className="text-muted-foreground text-center text-sm">
-          Already have an account?{" "}
-          <Link to="/login">Log in</Link>
+        <div className="text-secondary-foreground text-center text-sm">
+          Already have an account? <Link to="/login">Log in</Link>
         </div>
 
         {/* Optional Status Message */}

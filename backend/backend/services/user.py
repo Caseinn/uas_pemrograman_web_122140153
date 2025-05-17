@@ -4,6 +4,7 @@ from ..models.user import User
 from ..schemas.user import UserCreateSchema, UserUpdateSchema, UserSchema
 from marshmallow import ValidationError
 from sqlalchemy.orm import Session
+import bcrypt
 
 class UserService:
     """Service untuk operasi pengguna."""
@@ -28,21 +29,48 @@ class UserService:
         return db.query(User).filter(User.email == email).first()
 
     @staticmethod
+    def validate_username(username: str):
+        if not username:
+            raise ValueError("Username wajib diisi")
+        if len(username) < 3:
+            raise ValueError(f"Username minimal 3 karakter")
+        if len(username) > 50:
+            raise ValueError(f"Username maksimal 50 karakter")
+        return username
+
+    @staticmethod
+    def hash_password(password: str) -> str:
+        if len(password) < 8:
+            raise ValueError("Password harus minimal 8 karakter")
+        return bcrypt.hashpw(
+            password.encode("utf-8"), 
+            bcrypt.gensalt()
+        ).decode("utf-8")
+
+    @staticmethod
     def create_user(dbsession, user_data):
-        user = User(**user_data)
+        """Validate and create user"""
+        try:
+            validated_data = UserCreateSchema().load(user_data)
+        except ValidationError as err:
+            raise err
+        
+        UserService.validate_username(validated_data["username"])
+            
+        if "password" in validated_data:
+                    validated_data["password"] = UserService.hash_password(validated_data["password"])
+            
+        user = User(**validated_data)
         dbsession.add(user)
         dbsession.flush()
         return user
 
     @staticmethod
     def update_user(db: Session, user: User, update_data: dict) -> User:
-        """Perbarui pengguna."""
         try:
             validated_data = UserUpdateSchema().load(update_data, partial=True)
             if "password" in validated_data:
-                validated_data["password"] = bcrypt.hashpw(
-                    validated_data["password"].encode("utf-8"), bcrypt.gensalt()
-                ).decode("utf-8")
+                validated_data["password"] = UserService.hash_password(validated_data["password"])
             for key, value in validated_data.items():
                 setattr(user, key, value)
             db.commit()

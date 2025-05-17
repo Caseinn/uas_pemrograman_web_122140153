@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
-const API_URL = 'http://localhost:6543/api/v1';
+const API_URL = "http://localhost:6543/api/v1";
 
 export function useAuth() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const stored = Cookies.get("user");
+    return stored ? JSON.parse(stored) : null;
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 🔐 Login Function
   const login = async (username, password) => {
     setLoading(true);
     setError(null);
@@ -29,8 +35,18 @@ export function useAuth() {
         return false;
       }
 
+      Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
       setUser(data.user);
       setLoading(false);
+
+      // ✅ Redirect based on role
+      const role = data.user.role;
+      if (role === "admin") {
+        window.location.href = "/dashboard";
+      } else {
+        window.location.href = "/";
+      }
+
       return true;
     } catch (err) {
       setError("An unexpected error occurred.");
@@ -39,6 +55,7 @@ export function useAuth() {
     }
   };
 
+  // 📝 Register Function
   const register = async (username, email, password) => {
     setLoading(true);
     setError(null);
@@ -50,7 +67,6 @@ export function useAuth() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, email, password }),
-        credentials: "include",
       });
 
       const data = await res.json();
@@ -61,6 +77,7 @@ export function useAuth() {
         return false;
       }
 
+      Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
       setUser(data.user);
       setLoading(false);
       return true;
@@ -71,30 +88,11 @@ export function useAuth() {
     }
   };
 
-  const logout = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch(`${API_URL}/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        setError("Logout failed");
-        setLoading(false);
-        return false;
-      }
-
-      setUser(null);
-      setLoading(false);
-      return true;
-    } catch (err) {
-      setError("An unexpected error occurred.");
-      setLoading(false);
-      return false;
-    }
+  // 🚪 Logout Function
+  const logout = () => {
+    Cookies.remove("user");
+    Cookies.remove("auth_tkt");
+    setUser(null);
   };
 
   return {

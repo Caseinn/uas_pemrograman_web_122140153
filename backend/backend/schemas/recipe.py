@@ -24,7 +24,7 @@ class RecipeCreateSchema(RecipeSchema):
     description = fields.Str(required=True)
     ingredients = fields.Str(required=True)
     steps = fields.Str(required=True)
-    image = fields.Raw(type='file', required=False)
+    image = fields.Url(required=False, allow_none=True)
 
 class RecipeUpdateSchema(Schema):
     """Schema untuk pembaruan resep (hanya field yang bisa diubah)"""
@@ -32,4 +32,4 @@ class RecipeUpdateSchema(Schema):
     description = fields.String(validate=validate.Length(max=500))
     ingredients = fields.String(validate=validate.Length(max=1000))
     steps = fields.String(validate=validate.Length(max=2000))
-    image = fields.Raw(type='file')
+    image = fields.Raw(type='file', allow_none=True)
