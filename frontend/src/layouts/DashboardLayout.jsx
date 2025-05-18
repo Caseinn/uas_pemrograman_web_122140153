@@ -20,6 +20,11 @@ const navItems = [
     path: "/dashboard/manage-recipes",
     icon: BookOpen,
   },
+  {
+    label: "Manage Users",
+    path: "/dashboard/manage-users",
+    icon: BookOpen,
+  },
 ];
 
 export default function DashboardLayout({ children }) {

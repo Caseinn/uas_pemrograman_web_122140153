@@ -10,6 +10,8 @@ import RecipeDetail from "@/pages/recipes/DetailPage";
 import Dashboard from "@/pages/dashboard/Page";
 import ListRecipes from "@/pages/dashboard/manage-recipes/ListPage";
 import CreateRecipe from "@/pages/dashboard/manage-recipes/CreatePage";
+import ListUsers from "@/pages/dashboard/manage-users/ListPage";
+import CreateUser from "@/pages/dashboard/manage-users/CreatePage";
 import EditRecipe from "@/pages/dashboard/manage-recipes/EditPage";
 import NotFoundPage from "@/pages/not-found/Page";
 import UnAuthorizedPage from "@/pages/unauthorized/Page";
@@ -38,6 +40,11 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/dashboard/manage-recipes/edit/:id"
           element={<EditRecipe />}
+        />
+        <Route path="/dashboard/manage-users" element={<ListUsers />} />
+        <Route 
+        path="/dashboard/manage-users/create" 
+        element={<CreateUser />} 
         />
       </Routes>
     </BrowserRouter>

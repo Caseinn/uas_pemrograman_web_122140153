@@ -11,8 +11,8 @@ class UserService:
 
     @staticmethod
     def get_all_users(db: Session) -> List[User]:
-        """Dapatkan semua pengguna."""
-        return db.query(User).all()
+        """Dapatkan hanya pengguna dengan role 'user'."""
+        return db.query(User).filter(User.role == 'user').all()
 
     @staticmethod
     def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
@@ -83,4 +83,3 @@ class UserService:
     def delete_user(db: Session, user: User) -> None:
         """Hapus pengguna."""
         db.delete(user)
-        db.commit()

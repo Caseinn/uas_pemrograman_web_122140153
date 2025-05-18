@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
 
-const API_URL = "http://127.0.0.1:6543/api/v1/recipes";
+const USER_API_URL = "http://127.0.0.1:6543/api/v1/users";
 
-// Hook for fetching all recipes
-export function useRecipes() {
-  const [recipes, setRecipes] = useState([]);
+// 1. Fetch all users
+export function useUsers() {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(API_URL)
+    fetch(USER_API_URL, {
+      credentials: "include", // for cookies/auth if needed
+    })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch recipes");
+        if (!res.ok) throw new Error("Failed to fetch users");
         return res.json();
       })
       .then((data) => {
-        setRecipes(data);
+        setUsers(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -24,24 +26,27 @@ export function useRecipes() {
       });
   }, []);
 
-  return { recipes, loading, error };
+  return { users, loading, error };
 }
 
-// Hook for fetching a single recipe by ID
-export function useRecipeById(id) {
-  const [recipe, setRecipe] = useState(null);
+// 2. Fetch single user by ID
+export function useUserById(id) {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!id) return;
-    fetch(`${API_URL}/${id}`)
+
+    fetch(`${USER_API_URL}/${id}`, {
+      credentials: "include",
+    })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch recipe");
+        if (!res.ok) throw new Error("Failed to fetch user");
         return res.json();
       })
       .then((data) => {
-        setRecipe(data);
+        setUser(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -50,22 +55,22 @@ export function useRecipeById(id) {
       });
   }, [id]);
 
-  return { recipe, loading, error };
+  return { user, loading, error };
 }
 
-// Hook for creating a recipe
-export function useCreateRecipe() {
+// 3. Create user
+export function useCreateUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const createRecipe = async (formData) => {
+  const createUser = async (formData) => {
     setLoading(true);
     setError(null);
     setSuccess(false);
 
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch(USER_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +82,7 @@ export function useCreateRecipe() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Failed to create recipe");
+        throw new Error(data.message || "Failed to create user");
       }
 
       setSuccess(true);
@@ -90,20 +95,20 @@ export function useCreateRecipe() {
     }
   };
 
-  return { createRecipe, loading, error, success };
+  return { createUser, loading, error, success };
 }
 
-// Hook for updating a recipe
-export function useUpdateRecipe(id) {
+// 4. Update user
+export function useUpdateUser(id) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const updateRecipe = async (formData) => {
+  const updateUser = async (formData) => {
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
+      const res = await fetch(`${USER_API_URL}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +119,7 @@ export function useUpdateRecipe(id) {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || "Failed to update recipe");
+      if (!res.ok) throw new Error(data.message || "Failed to update user");
 
       return true;
     } catch (err) {
@@ -125,26 +130,27 @@ export function useUpdateRecipe(id) {
     }
   };
 
-  return { updateRecipe, loading, error };
+  return { updateUser, loading, error };
 }
 
-// Hook for deleting a recipe
-export function useDeleteRecipe() {
+// 5. Delete user
+export function useDeleteUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const deleteRecipe = async (id) => {
+  const deleteUser = async (id) => {
     setLoading(true);
     setError(null);
+
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
+      const res = await fetch(`${USER_API_URL}/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message || "Failed to delete recipe");
+        throw new Error(data.message || "Failed to delete user");
       }
 
       return true;
@@ -156,5 +162,5 @@ export function useDeleteRecipe() {
     }
   };
 
-  return { deleteRecipe, loading, error };
+  return { deleteUser, loading, error };
 }

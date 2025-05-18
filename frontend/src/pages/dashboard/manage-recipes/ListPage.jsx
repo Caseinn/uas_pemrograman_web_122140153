@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useRecipes, useDeleteRecipe } from "@/hooks/useRecipes";
 import { Link } from "react-router-dom";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import {
   AlertDialog,
@@ -23,7 +23,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner"; // ✅ Tambahkan ini
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -32,23 +32,30 @@ export default function ListRecipes() {
   const { deleteRecipe, loading: deleting } = useDeleteRecipe();
   const [page, setPage] = useState(1);
   const [deletingId, setDeletingId] = useState(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // ✅ Pemicu render ulang sederhana
+  const [localRecipes, setLocalRecipes] = useState([]); // ✅ Local state for display
+
+  // Set local recipes once loaded
+  useEffect(() => {
+    if (!loading && !error) {
+      setLocalRecipes(recipes);
+    }
+  }, [recipes, loading, error]);
 
   const handleDelete = async (id) => {
     const success = await deleteRecipe(id);
     if (success) {
-      toast.success("Recipe deleted successfully."); // ✅ toast sukses
+      toast.success("Recipe deleted successfully.");
       setDeletingId(null);
-      setRefreshTrigger((prev) => prev + 1); // ✅ picu ulang render
+      setLocalRecipes((prev) => prev.filter((r) => r.id !== id));
     } else {
-      toast.error("Failed to delete recipe."); // ✅ toast error
+      toast.error("Failed to delete recipe.");
     }
   };
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedRecipes = recipes.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(recipes.length / ITEMS_PER_PAGE);
+  const paginatedRecipes = localRecipes.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(localRecipes.length / ITEMS_PER_PAGE);
 
   return (
     <DashboardLayout>
@@ -82,7 +89,7 @@ export default function ListRecipes() {
               </TableHeader>
               <TableBody>
                 {paginatedRecipes.map((recipe, index) => (
-                  <TableRow key={`${recipe.id}-${refreshTrigger}`}>
+                  <TableRow key={recipe.id}>
                     <TableCell className="text-center font-medium">
                       {startIndex + index + 1}
                     </TableCell>

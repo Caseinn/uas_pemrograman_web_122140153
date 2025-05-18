@@ -1,8 +1,8 @@
-"""Create model
+"""init
 
-Revision ID: 68b7f8fd3dc8
-Revises: 
-Create Date: 2025-05-12 20:29:01.517617
+Revision ID: b2bb5344a77c
+Revises: 904463a5ab7b
+Create Date: 2025-05-18 14:02:07.492029
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '68b7f8fd3dc8'
-down_revision = None
+revision = 'b2bb5344a77c'
+down_revision = '904463a5ab7b'
 branch_labels = None
 depends_on = None
 
@@ -26,7 +26,7 @@ def upgrade():
     op.create_index('my_index', 'models', ['name'], unique=True, mysql_length=255)
     op.create_table('recipes',
     sa.Column('title', sa.String(length=200), nullable=False),
-    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('description', sa.Text(), nullable=False),
     sa.Column('ingredients', sa.Text(), nullable=False),
     sa.Column('steps', sa.Text(), nullable=False),
     sa.Column('image', sa.String(length=500), nullable=True),
@@ -40,7 +40,7 @@ def upgrade():
     sa.Column('username', sa.String(length=50), nullable=False),
     sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('password', sa.String(length=255), nullable=False),
-    sa.Column('role', sa.String(length=20), nullable=False),
+    sa.Column('role', sa.String(length=20), nullable=True),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),

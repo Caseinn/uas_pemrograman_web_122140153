@@ -13,7 +13,7 @@ class Recipe(BaseModel):
     image = Column(String(500), nullable=True)
     
     # Relationship with comments
-    comments = relationship("Comment", back_populates="recipe")
+    comments = relationship("Comment", back_populates="recipe", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<Recipe(title='{self.title}', id='{self.id}')>"

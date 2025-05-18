@@ -68,12 +68,12 @@ const HeroSection = forwardRef(
         ))}
 
         {/* Overlay Content */}
-        <div className="absolute inset-0 bg-black/20 z-10 flex flex-col items-center justify-center text-center px-6 pt-16 md:pt-8">
-          <img
+        <div className="absolute inset-0 bg-black/20 z-10 flex flex-col items-center justify-center text-center px-6">
+          {/* <img
             src="/mascot.png"
             alt="Mascot"
             className=" mb-4 rounded-full shadow-lg"
-          />
+          /> */}
           <h2 className="text-4xl lg:text-5xl font-extrabold text-white mb-4 drop-shadow-lg whitespace-pre-line">
             {title || "Nels Recipes\nDiscover the joy of cooking"}
           </h2>

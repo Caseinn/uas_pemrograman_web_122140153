@@ -4,8 +4,8 @@ import {
   MapPin,
   Phone,
   Instagram,
-  Twitter,
-  Facebook,
+  Linkedin,
+  Github,
 } from "lucide-react";
 
 export default function Footer() {
@@ -36,7 +36,7 @@ export default function Footer() {
             </li>
             <li className="flex items-start gap-2">
               <Mail className="w-4 h-4 mt-0.5 shrink-0" />
-              support@nelskitchen.com
+              ditorifki.irawan@gmail.com
             </li>
             <li className="flex items-start gap-2">
               <Phone className="w-4 h-4 mt-0.5 shrink-0" />
@@ -52,32 +52,31 @@ export default function Footer() {
           </h4>
           <div className="flex space-x-4 text-white/80 text-lg">
             <a
-              href="#"
+              href="https://github.com/caseinn "
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="hover:text-white transition-colors duration-200"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <a
+              href="https://instagram.com/ditorifkii "
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Instagram"
               className="hover:text-white transition-colors duration-200"
             >
               <Instagram className="w-5 h-5" />
             </a>
             <a
-              href="#"
-              aria-label="Twitter"
+              href="https://linkedin.com/in/ditorifkiirawan "
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
               className="hover:text-white transition-colors duration-200"
             >
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="hover:text-white transition-colors duration-200"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
-            <a
-              href="#"
-              aria-label="Email"
-              className="hover:text-white transition-colors duration-200"
-            >
-              <Mail className="w-5 h-5" />
+              <Linkedin className="w-5 h-5" />
             </a>
           </div>
         </div>

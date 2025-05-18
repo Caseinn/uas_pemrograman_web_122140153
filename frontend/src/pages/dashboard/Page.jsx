@@ -1,9 +1,8 @@
 import { useRecipes } from "@/hooks/useRecipes";
-import { useComments } from "@/hooks/useComments";
-import { useAllComments } from "@/hooks/useAllComments";
+import { useUsers } from "@/hooks/useUsers";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import { BookOpen, MessageSquareText } from "lucide-react";
+import { BookOpen, MessageSquareText, Users } from "lucide-react";
 import DashboardCardSkeleton from "@/components/skeleton/DashboardCardSkeleton";
 
 export default function Dashboard() {
@@ -13,15 +12,18 @@ export default function Dashboard() {
     loading: recipesLoading,
     error: recipesError,
   } = useRecipes();
+
+
   const {
-    comments,
-    loading: commentsLoading,
-    error: commentsError,
-  } = useAllComments();
+    users,
+    loading: usersLoading,
+    error: usersError,
+  } = useUsers();
 
   const recipeCount = recipes.length;
-  const commentCount = comments.length;
-  const isLoading = recipesLoading || commentsLoading;
+  const userCount = users.filter((u) => u.role === "user").length;
+
+  const isLoading = recipesLoading || usersLoading;
 
   return (
     <DashboardLayout>
@@ -30,8 +32,7 @@ export default function Dashboard() {
         <div className="mt-4">
           <h2 className="text-xl text-muted-foreground">
             Welcome back,{" "}
-            <span className="font-semibold text-gray-800">{user.username}</span>{" "}
-            👋
+            <span className="font-semibold text-gray-800">{user.username}</span> 👋
           </h2>
         </div>
       )}
@@ -40,9 +41,9 @@ export default function Dashboard() {
         Dashboard Overview
       </h1>
 
-      {(recipesError || commentsError) && (
+      {(recipesError || usersError) && (
         <p className="text-red-600">
-          Error: {(recipesError || commentsError).message}
+          Error: {(recipesError || usersError).message}
         </p>
       )}
 
@@ -54,6 +55,7 @@ export default function Dashboard() {
           </>
         ) : (
           <>
+            {/* Total Recipes */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-md transition">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-800">
@@ -67,16 +69,17 @@ export default function Dashboard() {
               </p>
             </div>
 
+            {/* Total Users */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-md transition">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-800">
-                  Total Comments
+                  Total Users
                 </h2>
-                <MessageSquareText className="w-6 h-6 text-primary" />
+                <Users className="w-6 h-6 text-primary" />
               </div>
-              <p className="text-3xl font-bold text-gray-900">{commentCount}</p>
+              <p className="text-3xl font-bold text-gray-900">{userCount}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                feedback entries from users
+                registered users in the system
               </p>
             </div>
           </>
