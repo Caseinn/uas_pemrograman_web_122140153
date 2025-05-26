@@ -12,20 +12,29 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { matchPath } from "react-router-dom";
 
 const navItems = [
-  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    match: "/dashboard", 
+    icon: LayoutDashboard,
+  },
   {
     label: "Manage Recipes",
     path: "/dashboard/manage-recipes",
+    match: "/dashboard/manage-recipes", 
     icon: BookOpen,
   },
   {
     label: "Manage Users",
     path: "/dashboard/manage-users",
+    match: "/dashboard/manage-users", 
     icon: BookOpen,
   },
 ];
+
 
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(false);
@@ -41,7 +50,6 @@ export default function DashboardLayout({ children }) {
       return;
     }
 
-    // Redirect jika login tapi bukan admin
     if (user.role !== "admin") {
       navigate("/unauthorized");
     }
@@ -95,8 +103,11 @@ export default function DashboardLayout({ children }) {
 
           {/* Navigation */}
           <nav className="space-y-2">
-            {navItems.map(({ label, path, icon: Icon }) => {
-              const active = location.pathname === path;
+            {navItems.map(({ label, path, match, icon: Icon }) => {
+              const active = matchPath(
+                { path: match, end: path === "/dashboard" },
+                location.pathname
+              );
               return (
                 <Link
                   key={path}
