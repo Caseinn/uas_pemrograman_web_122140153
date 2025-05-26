@@ -6,7 +6,7 @@ def test_create_and_get_recipe(dbsession):
         "description": "Lezat dan gurih",
         "ingredients": "beras\nsantan",
         "steps": "masak\nhidangkan",
-        "image": ""
+        "image": "https://example.com/image.jpg"
     }
     recipe = RecipeService.create_recipe(dbsession, recipe_data)
     dbsession.flush()

@@ -1,10 +1,14 @@
 from pyramid import testing
+from pyramid.interfaces import IRoutesMapper
 from backend import routes
 
 def test_routes_added():
     config = testing.setUp()
     routes.includeme(config)
-    route_names = [r.name for r in config.get_routes()]
+    mapper = config.registry.queryUtility(IRoutesMapper)
+    assert mapper is not None
+
+    route_names = [r.name for r in mapper.get_routes()]
     expected = [
         'home', 'api_v1.recipes', 'api_v1.recipe',
         'api_v1.users', 'api_v1.user',

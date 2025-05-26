@@ -2,10 +2,10 @@ from backend.views.auth import login, register
 from pyramid.testing import DummyRequest
 import json
 from pyramid.httpexceptions import HTTPUnauthorized
+from pyramid.response import Response
 
 
 def test_register_user_success(dbsession):
-    # Buat request registrasi
     req = DummyRequest(json_body={
         "username": "bob",
         "email": "bob@example.com",
@@ -14,27 +14,25 @@ def test_register_user_success(dbsession):
     })
     req.dbsession = dbsession
 
-    # Jalankan fungsi register
     response = register(req)
 
-    # Pastikan response adalah instance Response
-    assert hasattr(response, "body")
+    assert isinstance(response, Response)
 
-    # Parse body ke dict
-    data = json.loads(response.body)
+    raw = response.body.decode("utf-8") if isinstance(response.body, bytes) else response.body
+    data = json.loads(raw)
 
-    # Cek isi response
-    assert data["user"]["username"] == "bob"
+    # ✅ Sesuai dengan respons sekarang (tidak ada "user" nesting)
+    assert data["username"] == "bob"
+    assert data["email"] == "bob@example.com"
+    assert data["role"] == "user"
+
 
 def test_login_invalid_credentials(dbsession):
-    # Buat request login dengan akun yang belum ada
     req = DummyRequest(json_body={"username": "nope", "password": "wrong"})
     req.dbsession = dbsession
-    
 
-    # Harus gagal dengan HTTPUnauthorized
     try:
         login(req)
         assert False, "Expected HTTPUnauthorized"
     except HTTPUnauthorized:
-        pass 
+        pass

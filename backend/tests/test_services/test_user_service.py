@@ -5,6 +5,7 @@ def test_create_and_get_user(dbsession):
         "username": "alice",
         "email": "alice@example.com",
         "password": "securepass",
+        "role" : "user"
     }
     user = UserService.create_user(dbsession, user_data)
     dbsession.flush()

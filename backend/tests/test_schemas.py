@@ -8,6 +8,7 @@ def test_user_create_schema_valid():
         "username": "tester",
         "email": "tester@example.com",
         "password": "securepass123",
+        "role": "user"
     }
     result = UserCreateSchema().load(data)
     assert result["username"] == "tester"
