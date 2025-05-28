@@ -3,6 +3,7 @@
 *A recipe-sharing platform made with love, dedicated to my mother.*
 
 Built using **Python Pyramid** (backend) and **React** (frontend).
+[Detail](https://www.canva.com/design/DAGmvSNbu3g/qOIk9-DUb3EpHNeAwV4f6g/edit?utm_content=DAGmvSNbu3g&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## 💖 Inspiration
 
