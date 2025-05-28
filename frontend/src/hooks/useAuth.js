@@ -56,37 +56,35 @@ export function useAuth() {
   };
 
   // 📝 Register Function
-  const register = async (username, email, password) => {
-    setLoading(true);
-    setError(null);
+const register = async (username, email, password) => {
+  setLoading(true);
+  setError(null);
 
-    try {
-      const res = await fetch(`${API_URL}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
+  try {
+    const res = await fetch(`${API_URL}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, email, password, role: "user" }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.message || "Registration failed");
-        setLoading(false);
-        return false;
-      }
-
-      Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
-      setUser(data.user);
+    if (!res.ok) {
       setLoading(false);
-      return true;
-    } catch (err) {
-      setError("An unexpected error occurred.");
-      setLoading(false);
-      return false;
+      return { success: false, errors: data.errors || {} };
     }
-  };
+
+    setLoading(false);
+    return { success: true }; // tidak set cookie di sini!
+  } catch (err) {
+    setError("An unexpected error occurred.");
+    setLoading(false);
+    return { success: false, errors: { general: "Unexpected error" } };
+  }
+};
+
 
   // 🚪 Logout Function
   const logout = () => {
