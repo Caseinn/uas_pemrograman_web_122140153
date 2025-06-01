@@ -105,6 +105,7 @@ From the `backend/` directory:
 pytest
 ```
 
+![Test Result](https://i.imgur.com/6avjp8C.png)
 ## ❤️ Dedicated to My Mother
 
 This app is not just a class project — it's a tribute to the person who taught me to cook and inspired my love for food and sharing.
