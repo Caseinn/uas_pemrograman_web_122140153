@@ -15,24 +15,27 @@ export default function RecipeCard({ recipe }) {
   return (
     <Link
       to={`/recipes/${recipe.id}`}
-      className="group block rounded-xl overflow-hidden border border-primary/5 shadow-sm hover:shadow-sm hover:-translate-y-1 transform transition duration-300 bg-amber-50"
+      className="group block rounded-2xl overflow-hidden border border-primary/10 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transform transition duration-300 bg-white/90 backdrop-blur"
     >
-      <div className="aspect-w-4 aspect-h-3 overflow-hidden max-h-[300px]">
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={recipe.image || defaultImage}
           alt={recipe.title}
           loading="lazy"
-          className="w-full h-[300px] object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
-      <div className="p-4 flex flex-col gap-2">
-        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
-          {recipe.title}
-        </h3>
-        <p className="text-sm text-gray-600 line-clamp-1">
-          {truncate(recipe.description, 80)}
+      <div className="p-5 flex flex-col gap-3">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
+            {recipe.title}
+          </h3>
+          <span className="h-2 w-2 rounded-full bg-primary mt-1 shrink-0 animate-pulse" aria-hidden />
+        </div>
+        <p className="text-sm text-muted-foreground line-clamp-2">
+          {truncate(recipe.description, 100)}
         </p>
-        {/* Optional footer removed if category/duration unavailable */}
       </div>
     </Link>
   );

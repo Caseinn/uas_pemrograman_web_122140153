@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://127.0.0.1:6543/api/v1/comments";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:6543/api/v1";
+const API_URL = `${API_BASE}/comments`;
 
 export function useComments(recipeId = null) {
   const [comments, setComments] = useState([]);

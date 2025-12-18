@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { matchPath } from "react-router-dom";
+import { toast } from "sonner";
 
 const navItems = [
   {
@@ -58,8 +59,10 @@ export default function DashboardLayout({ children }) {
   const handleLogout = async () => {
     const success = await logout();
     if (success) {
-      alert("Logout successful!");
+      toast.success("Logout successful");
       navigate("/login");
+    } else {
+      toast.error("Logout failed. Please try again.");
     }
   };
 

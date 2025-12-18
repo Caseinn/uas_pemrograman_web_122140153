@@ -30,7 +30,7 @@ export default function Navbar() {
   const getLinkClass = (path) =>
     `px-4 py-2 rounded-md transition-colors duration-300 ${
       isActive(path)
-        ? "text-primary font-semibold underline"
+        ? "text-primary font-semibold"
         : "text-primary/80 hover:text-primary"
     }`;
 
@@ -65,24 +65,34 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed z-50 left-1/2 top-4 w-[95%] max-w-6xl -translate-x-1/2 rounded-xl 
-        transition-all duration-300 px-4 md:px-6 bg-secondary shadow-lg`}
+      className={`fixed z-50 left-1/2 top-3 w-[96%] max-w-6xl -translate-x-1/2 rounded-xl 
+        transition-all duration-300 px-4 md:px-6 ${
+          isScrolled
+            ? "bg-[#e0d7c8]/95 backdrop-blur-xl border border-primary/20 shadow-2xl"
+            : "bg-[#e9dfd1]/90 backdrop-blur-md border border-primary/14 shadow-xl"
+        }`}
     >
-      <div className="flex justify-between items-center py-3">
+      <div className="flex justify-between items-center py-3 md:py-3.5">
         <Link
           to="/"
-          className="text-lg flex items-center gap-1 font-bold text-primary"
+          className="text-lg flex items-center gap-2 font-semibold text-primary"
         >
-          <img src="/mascot.png" alt="Mascot" className="w-12 h-12 mb-4" />
+          <img src="/mascot.png" alt="Mascot" className="w-12 h-12" />
           Nel's Kitchen
         </Link>
 
-        <nav className="hidden md:flex space-x-8">
-          {navItems.map(({ label, path }) => (
-            <Link key={path} to={path} className={getLinkClass(path)}>
-              {label}
-            </Link>
-          ))}
+        <nav className="hidden md:flex space-x-6">
+          {navItems.map(({ label, path }) => {
+            const active = isActive(path);
+            return (
+              <Link key={path} to={path} className="relative">
+                <span className={getLinkClass(path)}>{label}</span>
+                {active && (
+                  <span className="absolute left-3 right-3 -bottom-1 h-0.5 rounded-full bg-primary" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
@@ -93,6 +103,8 @@ export default function Navbar() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden focus:outline-none"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
         >
           <svg
             className="h-6 w-6 text-primary"
@@ -120,8 +132,8 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <nav className="md:hidden -mt-2 bg-secondary text-primary-foreground rounded-lg px-4 py-4">
-          <ul className="flex flex-col gap-2">
+        <nav className="md:hidden bg-secondary/95 backdrop-blur text-primary-foreground rounded-2xl px-4 py-4 my-3 shadow-lg border border-primary/10">
+          <ul className="flex flex-col gap-3">
             {navItems.map(({ label, path }) => (
               <li key={path}>
                 <Link

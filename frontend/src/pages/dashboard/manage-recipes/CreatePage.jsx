@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner"; // ✅ Tambahkan ini
 import DashboardLayout from "@/layouts/DashboardLayout";
 
-const API_URL = "http://localhost:6543/api/v1/recipes";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:6543/api/v1";
+const API_URL = `${API_BASE}/recipes`;
 
 export default function CreateRecipe() {
   const [form, setForm] = useState({

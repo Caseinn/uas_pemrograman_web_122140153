@@ -27,8 +27,8 @@ GitHub: [@Caseinn](https://github.com/Caseinn)
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Caseinn/nels-kitchen.git
-   cd nels-kitchen/backend
+   git clone https://github.com/Caseinn/uas_pemrograman_web_122140153.git
+   cd uas_pemrograman_web_122140153/backend
    ```
 
 2. **Create and activate a virtual environment**
@@ -109,3 +109,4 @@ pytest
 ## ❤️ Dedicated to My Mother
 
 This app is not just a class project — it's a tribute to the person who taught me to cook and inspired my love for food and sharing.
+

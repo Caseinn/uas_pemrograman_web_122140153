@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Cookies from "js-cookie";
 
-const API_URL = "http://localhost:6543/api/v1";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:6543/api/v1";
 
 export function useAuth() {
   const [user, setUser] = useState(() => {
@@ -12,13 +12,12 @@ export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 🔐 Login Function
   const login = async (username, password) => {
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch(`${API_URL}/login`, {
+      const res = await fetch(`${API_BASE}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,65 +31,61 @@ export function useAuth() {
       if (!res.ok) {
         setError(data.message || "Login failed");
         setLoading(false);
-        return false;
+        return { success: false, message: data.message || "Login failed" };
       }
 
       Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
       setUser(data.user);
       setLoading(false);
 
-      // ✅ Redirect based on role
       const role = data.user.role;
-      if (role === "admin") {
-        window.location.href = "/dashboard";
-      } else {
-        window.location.href = "/";
-      }
-
-      return true;
+      return { success: true, role };
     } catch (err) {
       setError("An unexpected error occurred.");
       setLoading(false);
-      return false;
+      return { success: false, message: "Unexpected error" };
     }
   };
 
-  // 📝 Register Function
-const register = async (username, email, password) => {
-  setLoading(true);
-  setError(null);
+  const register = async (username, email, password) => {
+    setLoading(true);
+    setError(null);
 
-  try {
-    const res = await fetch(`${API_URL}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, email, password, role: "user" }),
-    });
+    try {
+      const res = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password, role: "user" }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
+      if (!res.ok) {
+        setLoading(false);
+        return { success: false, errors: data.errors || {} };
+      }
+
       setLoading(false);
-      return { success: false, errors: data.errors || {} };
+      return { success: true };
+    } catch (err) {
+      setError("An unexpected error occurred.");
+      setLoading(false);
+      return { success: false, errors: { general: "Unexpected error" } };
     }
+  };
 
-    setLoading(false);
-    return { success: true }; // tidak set cookie di sini!
-  } catch (err) {
-    setError("An unexpected error occurred.");
-    setLoading(false);
-    return { success: false, errors: { general: "Unexpected error" } };
-  }
-};
-
-
-  // 🚪 Logout Function
-  const logout = () => {
-    Cookies.remove("user");
-    Cookies.remove("auth_tkt");
-    setUser(null);
+  const logout = async () => {
+    try {
+      Cookies.remove("user");
+      Cookies.remove("auth_tkt");
+      setUser(null);
+      return true;
+    } catch (err) {
+      setError("Failed to logout.");
+      return false;
+    }
   };
 
   return {

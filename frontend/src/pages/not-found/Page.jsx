@@ -22,12 +22,20 @@ export default function NotFoundPage() {
           <p className="text-gray-600 dark:text-gray-300">
             The page you're looking for doesn't exist or has been moved.
           </p>
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors duration-300"
-          >
-            ← Back to Home
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors duration-300"
+            >
+              Back to Home
+            </Link>
+            <a
+              href="mailto:ditorifki.irawan@gmail.com"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300"
+            >
+              Contact Support
+            </a>
+          </div>
         </div>
       </section>
     </main>

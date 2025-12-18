@@ -4,7 +4,6 @@ import RecipeCard from "@/components/card/Recipe";
 import RecipeCardSkeleton from "@/components/skeleton/RecipeCardSkeleton";
 import { useRecipes } from "@/hooks/useRecipes";
 import MainLayout from "@/components/Layout";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import RecipeSearchBar from "@/components/RecipeSearchBar";
 import HeroSection from "@/components/landing-page/Hero";
@@ -52,7 +51,6 @@ export default function RecipeList() {
         title="Explore Our Recipe Collection"
         subtitle="Find your favorite dishes and get inspired to cook something new today!"
         ctaText="See All Recipes"
-        // ctaLink="/recipes#all-recipes"
         images={[
           "/images/kitchen1.jpg",
           "/images/kitchen2.jpg",

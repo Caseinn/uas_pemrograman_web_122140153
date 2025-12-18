@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-const USER_API_URL = "http://127.0.0.1:6543/api/v1/users";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:6543/api/v1";
+const USER_API_URL = `${API_BASE}/users`;
 
 // 1. Fetch all users
 export function useUsers() {

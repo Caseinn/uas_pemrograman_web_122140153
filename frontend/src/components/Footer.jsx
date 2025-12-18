@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   Mail,
   MapPin,
@@ -6,30 +5,35 @@ import {
   Instagram,
   Linkedin,
   Github,
+  Heart,
 } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary text-white pt-12 px-6 relative overflow-hidden">
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 pb-12 border-b border-white/20">
+    <footer className="relative overflow-hidden bg-gradient-to-br from-primary/95 via-primary to-primary/90 text-white">
+      {/* Decorative accents */}
+      <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-10%] bottom-[-20%] h-80 w-80 rounded-full bg-white/10 blur-3xl" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-14 flex flex-col lg:flex-row gap-12">
         {/* Brand Info */}
-        <div className="flex-1">
-          <h3 className="text-xl font-bold mb-4">Nel's Kitchen</h3>
-          <p className="text-sm text-white/80 max-w-xs">
-            A digital platform to save, organize, and share delicious recipes
-            with ease.
+        <div className="flex-1 space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/80">
+            Nel's Kitchen
+          </div>
+          <h3 className="text-2xl font-bold">Cook, share, and savor</h3>
+          <p className="text-sm text-white/80 max-w-sm leading-relaxed">
+            A cozy corner of the internet to save, organize, and share the
+            recipes that make your table feel like home.
           </p>
         </div>
 
         {/* Contact Info */}
-        <div className="flex-1">
-          <h4 className="text-md font-semibold mb-4 text-white/90">
-            Contact Us
-          </h4>
-          <ul className="space-y-3 text-sm text-white/80">
+        <div className="flex-1 space-y-4">
+          <h4 className="text-md font-semibold text-white/90">Contact</h4>
+          <ul className="space-y-3 text-sm text-white/85">
             <li className="flex items-start gap-2">
               <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
               Jambi, Indonesia
@@ -46,13 +50,11 @@ export default function Footer() {
         </div>
 
         {/* Social Media */}
-        <div className="flex-1">
-          <h4 className="text-md font-semibold mb-4 text-white/90">
-            Follow Us
-          </h4>
-          <div className="flex space-x-4 text-white/80 text-lg">
+        <div className="flex-1 space-y-4">
+          <h4 className="text-md font-semibold text-white/90">Follow</h4>
+          <div className="flex space-x-4 text-white/85 text-lg">
             <a
-              href="https://github.com/caseinn "
+              href="https://github.com/caseinn"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -61,7 +63,7 @@ export default function Footer() {
               <Github className="w-5 h-5" />
             </a>
             <a
-              href="https://instagram.com/ditorifkii "
+              href="https://instagram.com/ditorifkii"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -70,7 +72,7 @@ export default function Footer() {
               <Instagram className="w-5 h-5" />
             </a>
             <a
-              href="https://linkedin.com/in/ditorifkiirawan "
+              href="https://linkedin.com/in/ditorifkiirawan"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
@@ -79,11 +81,29 @@ export default function Footer() {
               <Linkedin className="w-5 h-5" />
             </a>
           </div>
+
+          <div className="rounded-xl bg-white/10 border border-white/15 p-4 space-y-2">
+            <p className="text-sm text-white/80">
+              Get occasional recipe drops and cooking notes.
+            </p>
+            <a
+              href="mailto:ditorifki.irawan@gmail.com"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-white/90"
+            >
+              Say hello →
+            </a>
+          </div>
         </div>
       </div>
-      {/* Copyright */}
-      <div className="relative z-10 py-6 text-center text-sm text-white/60">
-        © {currentYear} Nel's Kitchen. Made with Love.
+
+      {/* Footer bottom */}
+      <div className="relative z-10 border-t border-white/15">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-white/70">
+          <span>© {currentYear} Nel's Kitchen. All rights reserved.</span>
+          <span className="inline-flex items-center gap-2">
+            Crafted with <Heart className="h-4 w-4 text-white/90" /> and good food.
+          </span>
+        </div>
       </div>
     </footer>
   );

@@ -26,7 +26,8 @@ requires = [
     'pytest',                
     'pytest-cov',            
     'Pillow',
-    'psycopg2-binary'                
+    'psycopg2-binary',
+    'pytz'                
 ]
 
 tests_require = [

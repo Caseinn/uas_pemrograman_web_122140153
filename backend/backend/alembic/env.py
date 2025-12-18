@@ -1,4 +1,5 @@
-"""Pyramid bootstrap environment. """
+"""Pyramid bootstrap environment."""
+import os
 from alembic import context
 from pyramid.paster import get_appsettings, setup_logging
 from sqlalchemy import engine_from_config
@@ -10,6 +11,12 @@ config = context.config
 setup_logging(config.config_file_name)
 
 settings = get_appsettings(config.config_file_name)
+
+# Allow DATABASE_URL env override so CI/CD and Render can supply it directly.
+env_db_url = os.getenv("DATABASE_URL")
+if env_db_url:
+    settings["sqlalchemy.url"] = env_db_url
+
 target_metadata = Base.metadata
 
 

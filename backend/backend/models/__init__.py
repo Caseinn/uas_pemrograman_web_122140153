@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import configure_mappers
@@ -107,6 +108,12 @@ def includeme(config):
 
     # use pyramid_retry to retry a request when transient exceptions occur
     config.include('pyramid_retry')
+
+    # Determine DB URL (prefer env DATABASE_URL, fallback to ini variable `database_url` or `sqlalchemy.url`)
+    db_url = os.getenv('DATABASE_URL') or settings.get('database_url') or settings.get('sqlalchemy.url')
+    if not db_url:
+        raise RuntimeError("DATABASE_URL (or database_url) must be set for the backend to start.")
+    settings['sqlalchemy.url'] = db_url
 
     # hook to share the dbengine fixture in testing
     dbengine = settings.get('dbengine')

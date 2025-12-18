@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import AuthLayout from "@/layouts/AuthLayout";
+import { Loader2, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Register() {
   const { register } = useAuth();
@@ -18,7 +19,10 @@ export default function Register() {
     password_confirmation: "",
   });
   const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +33,7 @@ export default function Register() {
     e.preventDefault();
     setProcessing(true);
     setErrors({});
+    setStatus(null);
 
     if (data.password !== data.password_confirmation) {
       setErrors({ password_confirmation: "Passwords do not match" });
@@ -39,8 +44,10 @@ export default function Register() {
     const success = await register(data.username, data.email, data.password);
 
     if (success) {
-      alert("Registration successful!");
+      toast.success("Registration successful!");
       navigate("/login");
+    } else {
+      setStatus("Registration failed. Please try again.");
     }
 
     setProcessing(false);
@@ -94,18 +101,38 @@ export default function Register() {
 
           {/* Password */}
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              name="password"
-              required
-              autoComplete="new-password"
-              value={data.password}
-              onChange={handleChange}
-              disabled={processing}
-              placeholder="Password"
-            />
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              <span className="text-xs text-muted-foreground">
+                At least 8 characters
+              </span>
+            </div>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                required
+                autoComplete="new-password"
+                value={data.password}
+                onChange={handleChange}
+                disabled={processing}
+                placeholder="Password"
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-primary focus:outline-none"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" aria-hidden />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden />
+                )}
+              </button>
+            </div>
             {errors.password && (
               <p className="text-sm text-red-500">{errors.password}</p>
             )}
@@ -114,17 +141,32 @@ export default function Register() {
           {/* Confirm Password */}
           <div className="grid gap-2">
             <Label htmlFor="password_confirmation">Confirm password</Label>
-            <Input
-              id="password_confirmation"
-              type="password"
-              name="password_confirmation"
-              required
-              autoComplete="new-password"
-              value={data.password_confirmation}
-              onChange={handleChange}
-              disabled={processing}
-              placeholder="Confirm password"
-            />
+            <div className="relative">
+              <Input
+                id="password_confirmation"
+                type={showConfirm ? "text" : "password"}
+                name="password_confirmation"
+                required
+                autoComplete="new-password"
+                value={data.password_confirmation}
+                onChange={handleChange}
+                disabled={processing}
+                placeholder="Confirm password"
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirm((prev) => !prev)}
+                className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-primary focus:outline-none"
+                aria-label={showConfirm ? "Hide password confirmation" : "Show password confirmation"}
+              >
+                {showConfirm ? (
+                  <EyeOff className="h-4 w-4" aria-hidden />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden />
+                )}
+              </button>
+            </div>
             {errors.password_confirmation && (
               <p className="text-sm text-red-500">
                 {errors.password_confirmation}
@@ -134,19 +176,26 @@ export default function Register() {
 
           {/* Submit Button */}
           <Button type="submit" className="mt-2 w-full" disabled={processing}>
-            {processing ? <span className="animate-spin mr-2">🔄</span> : null}
+            {processing ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+            ) : null}
             Create account
           </Button>
         </div>
 
         {/* Login Link */}
         <div className="text-secondary-foreground text-center text-sm">
-          Already have an account? <Link to="/login">Log in</Link>
+          Already have an account? <Link to="/login" className="font-semibold text-primary hover:text-primary/90">Log in</Link>
         </div>
 
         {/* Optional Status Message */}
         {status && (
-          <div className="text-center text-sm text-red-500 mt-2">{status}</div>
+          <div
+            className="text-center text-sm text-red-500 mt-2"
+            aria-live="polite"
+          >
+            {status}
+          </div>
         )}
       </form>
     </AuthLayout>
