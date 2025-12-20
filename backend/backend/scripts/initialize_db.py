@@ -1,3 +1,5 @@
+import argparse
+import os
 import transaction
 import bcrypt
 from pyramid.paster import get_appsettings, setup_logging
@@ -7,10 +9,23 @@ from ..models.recipe import Recipe
 from ..models.user import User
 from ..models.comment import Comment
 
-def main():
-    config_uri = 'development.ini'
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Seed the database with initial data.")
+    parser.add_argument(
+        "config_uri",
+        nargs="?",
+        default=os.environ.get("APP_CONFIG", "development.ini"),
+        help="Path to the Pyramid config file (default: APP_CONFIG or development.ini)",
+    )
+    args = parser.parse_args(argv)
+    config_uri = args.config_uri
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
+
+    env_db_url = os.getenv("DATABASE_URL")
+    if env_db_url:
+        settings["sqlalchemy.url"] = env_db_url
+
     engine = engine_from_config(settings, 'sqlalchemy.')
 
     session_factory = get_session_factory(engine)

@@ -62,6 +62,21 @@ GitHub: [@Caseinn](https://github.com/Caseinn)
 
    The backend will be available at `http://localhost:6543`.
 
+### Backend (Docker / VPS)
+
+1. **Create environment file**
+   ```bash
+   cp .env.example .env # On Windows: copy .env.example .env
+   ```
+   Update `AUTH_SECRET` and `ALLOWED_ORIGIN` before deploying.
+
+2. **Build and start**
+   ```bash
+   docker compose up --build
+   ```
+
+   Migrations and seed data run automatically on container start. The backend will be available at `http://localhost:6543`.
+
 ### 💻 Frontend (React)
 
 1. **Navigate to the frontend directory**

@@ -1,3 +1,4 @@
+import os
 from pyramid.config import Configurator
 from .views.cors import cors_tween_factory
 from pyramid.renderers import JSON
@@ -7,8 +8,9 @@ from pyramid.authorization import ACLAuthorizationPolicy
 def main(global_config, **settings):
     """This function returns a Pyramid WSGI application."""
     with Configurator(settings=settings) as config:
+        auth_secret = os.getenv("AUTH_SECRET") or settings.get("auth.secret") or "super_secret_key"
         authn_policy = AuthTktAuthenticationPolicy(
-            secret='super_secret_key',
+            secret=auth_secret,
             hashalg='sha512'
         )
         authz_policy = ACLAuthorizationPolicy()

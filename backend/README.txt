@@ -31,7 +31,7 @@ Getting Started
 
         env/bin/alembic -c development.ini upgrade head
 
-- Load default data into the database using a script.
+- Load default data into the database using a script (uses APP_CONFIG or DATABASE_URL if set).
 
     env/bin/initialize_backend_db development.ini
 
