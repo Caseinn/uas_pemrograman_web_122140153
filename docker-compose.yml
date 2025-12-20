@@ -27,7 +27,7 @@ services:
       AUTH_SECRET: ${AUTH_SECRET:-change-me}
       ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:5173}
     ports:
-      - "6543:6543"
+      - "${BACKEND_PORT:-6544}:6543"
 
 volumes:
   db_data:
