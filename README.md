@@ -68,14 +68,14 @@ GitHub: [@Caseinn](https://github.com/Caseinn)
    ```bash
    cp .env.example .env # On Windows: copy .env.example .env
    ```
-   Update `AUTH_SECRET` and `ALLOWED_ORIGIN` before deploying.
+   Update `AUTH_SECRET`, `ALLOWED_ORIGIN`, and `BACKEND_PORT` before deploying.
 
 2. **Build and start**
    ```bash
    docker compose up --build
    ```
 
-   Migrations and seed data run automatically on container start. The backend will be available at `http://localhost:6543`.
+   Migrations and seed data run automatically on container start. The backend will be available at `http://localhost:6544` (or `BACKEND_PORT`).
 
 ### 💻 Frontend (React)
 
